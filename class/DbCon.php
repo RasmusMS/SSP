@@ -42,6 +42,25 @@ class DbCon {
     // Returns the products
     return $products;
   }
+
+  public function getProductById($id) {
+    // Creates a new array to contain each product
+    $product = null;
+
+    // The SQL statement to get each product
+    $sql = "SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE idProduct = $id";
+
+    // Queries the statement
+    $result = $this->con->query($sql);
+
+    // Puts each product into the products array
+    while($row = $result->fetch_object()) {
+      $product = new Product($row->idProduct, $row->name, $row->description, $row->price);
+    }
+
+    // Returns the products
+    return $product;
+  }
 }
 
 ?>

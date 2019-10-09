@@ -1,5 +1,5 @@
 <?php
-  class Product {
+  class Product implements JsonSerializable {
     // Attributes
     private $id;
     private $name;
@@ -13,7 +13,7 @@
       $this->price = $price;
     }
 
-    public function getId() {
+    /*public function getId() {
       return $this->id;
     }
 
@@ -27,6 +27,15 @@
 
     public function getPrice() {
       return $this->price;
+    }*/
+
+    public function jsonSerialize() {
+      return [
+        "id"=>$this->id,
+        "name"=>$this->name,
+        "description"=>$this->description,
+        "price"=>$this->price
+      ];
     }
   }
 ?>
