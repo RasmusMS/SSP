@@ -48,7 +48,7 @@ class DbCon {
     $product = null;
 
     // The SQL statement to get each product
-    $sql = "SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE idProduct = $id";
+    $sql = "SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE products.idProduct = $id";
 
     // Queries the statement
     $result = $this->con->query($sql);
@@ -60,6 +60,28 @@ class DbCon {
 
     // Returns the products
     return $product;
+  }
+
+  public function getProductByName($name) {
+    $product = null;
+    $sql = "SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE products.name = $name";
+    $result = $this->con->query($sql);
+
+    while($row = $result->fetch_object()) {
+      $product = new Product($row->idProduct, $row->name, $row->description, $row->price);
+    }
+
+    return $product;
+  }
+
+  public function createProduct($name, $desc, $price) {
+    $sql = "INSERT INTO products (products.name, products.description, products.price) VALUES ('$name', '$desc', '$price')";
+
+    if($this->con->query($sql)) {
+      echo "Successfully created the product!";
+    } else {
+      echo "I enjoyed the ride but this was an epic failure mate!";
+    }
   }
 }
 

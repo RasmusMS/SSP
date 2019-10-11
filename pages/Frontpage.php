@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 include_once 'class/DbCon.php';
 
+// Returns the method used. IE GET, POST, PUT or DELETE
 $httpMethod =  $_SERVER['REQUEST_METHOD'];
 
 $uri = $_SERVER['REQUEST_URI'];
@@ -22,6 +23,7 @@ $uri = array_values($tempUri);
 //var_dump($uri);
 //echo '</pre>';
 
+// Request the headers
 $headers = apache_request_headers();
 $accept = str_replace(' ', '',$headers['Accept']);
 $accept = explode(',',$accept);
@@ -30,6 +32,7 @@ $accept = explode(',',$accept);
 //var_dump($accept);
 //echo '</pre>';
 
+// Execute code based on method
 switch ($httpMethod) {
   case 'GET':
   // Looking at the URI for which resources we're asking for
@@ -40,12 +43,11 @@ switch ($httpMethod) {
       // Get the return value from the getAllProducts function
       $products = $dbCon->getAllProducts();
 
+      // If its json being requested it'll format it as json.
       if(in_array('application/json',$accept)){
           header('Access_Control-Allow-Origin: *');
           header("Content-Type: application/json; charset=utf-8");
           echo json_encode($products);
-      } else if(in_array('application/xml',$accept)) {
-
       } else {
         http_response_code(412);
         die('412 - Wrong accept type. Only JSON and XML supported!');
@@ -61,8 +63,19 @@ switch ($httpMethod) {
         header('Access_Control-Allow-Origin: *');
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($product);
-      } else if(in_array('application/xml',$accept)) {
+      } else {
+        http_response_code(412);
+        die('412 - Wrong accept type. Only JSON and XML supported!');
+      }
+    } else if ($uri[0] === 'product' && $uri[1] === 'name' && !empty($uri[2])) {
+      $dbCon = new DbCon();
 
+      $product = $dbCon->getProductByName($uri[2]);
+
+      if(in_array('application/json',$accept)){
+        header('Access_Control-Allow-Origen: *');
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode($product);
       } else {
         http_response_code(412);
         die('412 - Wrong accept type. Only JSON and XML supported!');
@@ -70,7 +83,12 @@ switch ($httpMethod) {
     }
     break;
   case 'POST':
-    echo 'POST REQ';
+    if($uri[0] === 'products') {
+      $dbCon = new DbCon();
+      $product = $dbCon->createProduct($_POST['name'], $_POST['description'], $_POST['price']);
+    } else {
+      echo "huh?";
+    }
     break;
 
   case 'PUT':
