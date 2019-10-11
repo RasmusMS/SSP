@@ -80,7 +80,8 @@ class DbCon {
     if($this->con->query($sql)) {
       echo "Successfully created the product!";
     } else {
-      echo "I enjoyed the ride but this was an epic failure mate!";
+      http_response_code(400);
+      die('400 - Bad Request');
     }
   }
 }

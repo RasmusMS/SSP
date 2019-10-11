@@ -85,9 +85,17 @@ switch ($httpMethod) {
   case 'POST':
     if($uri[0] === 'products') {
       $dbCon = new DbCon();
-      $product = $dbCon->createProduct($_POST['name'], $_POST['description'], $_POST['price']);
+      $name = $_POST['name'];
+      $desc = $_POST['description'];
+      $price = $_POST['price'];
+
+      $product = $dbCon->createProduct($name, $desc, $price);
+    } else if ($uri[0] === 'product'){
+      http_response_code(405);
+      die('405 - Method not allowed!');
     } else {
-      echo "huh?";
+      http_response_code(404);
+      die('404 - Page not found!');
     }
     break;
 
