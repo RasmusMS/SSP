@@ -85,8 +85,8 @@ class DbCon {
     }
   }
 
-  public function updateProduct($id, $name, $desc, $price) {
-    $sql = "UPDATE products SET name = '$name', description = '$desc', price = '$price' WHERE idProduct = '$id';";
+  public function updateProduct($product) {
+    $sql = "UPDATE products SET name = '$product->name', description = '$product->description', price = '$product->price' WHERE idProduct = '$product->id';";
 
     if($this->con->query($sql)) {
       echo "Successfully updated the product!";
