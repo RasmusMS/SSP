@@ -121,8 +121,6 @@
          $result = json_decode(file_get_contents('php://input'));
          $product = $result;
 
-         var_dump($product);
-
          $dbCon->updateProduct($product);
        } else {
          echo "Something went wrong with the PUT";

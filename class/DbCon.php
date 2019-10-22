@@ -86,9 +86,15 @@ class DbCon {
   }
 
   public function updateProduct($product) {
-    $sql = "UPDATE products SET name = '$product->name', description = '$product->description', price = '$product->price' WHERE idProduct = '$product->id';";
+    $sql = $this->con->prepare("UPDATE products SET name = ?, description = ?, price = ? WHERE idProduct = ?;");
+    $sql->bind_param("ssii", $name, $description, $price, $id);
 
-    if($this->con->query($sql)) {
+    $name = $product->name;
+    $description = $product->description;
+    $price = $product->price;
+    $id = $product->id;
+
+    if($sql->execute()) {
       echo "Successfully updated the product!";
     } else {
       http_response_code(400);
