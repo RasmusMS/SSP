@@ -80,6 +80,9 @@ switch ($httpMethod) {
         http_response_code(412);
         die('412 - Wrong accept type. Only JSON and XML supported!');
       }
+    } else {
+      http_response_code(404);
+      die('404 - Page not found!');
     }
     break;
   case 'POST':
@@ -89,7 +92,7 @@ switch ($httpMethod) {
       $desc = $_POST['description'];
       $price = $_POST['price'];
 
-      $product = $dbCon->createProduct($name, $desc, $price);
+      $dbCon->createProduct($name, $desc, $price);
     } else if ($uri[0] === 'product'){
       http_response_code(405);
       die('405 - Method not allowed!');
@@ -100,11 +103,38 @@ switch ($httpMethod) {
     break;
 
   case 'PUT':
-    echo 'PUT REQ';
+    if($uri[0] === 'product') {
+      $dbCon = new DbCon();
+      $results = json_decode(file_get_contents('php://input'));
+      $id = $results['id'];
+      $name = $results['name'];
+      $desc = $results['description'];
+      $price = $results['price'];
+
+      var_dump($results);
+
+      $dbCon->updateProduct($id, $name, $desc, $price);
+    } else if ($uri[0] === 'products') {
+      http_response_code(405);
+      die('405 - Method not allowed!');
+    } else {
+      http_response_code(404);
+      die('404 - Page not found!');
+    }
     break;
 
-  case '"DELETE"':
-    echo '"DELETE REQ"';
+  case 'DELETE':
+    if($uri[0] === 'products' && !empty($uri[1])) {
+      $dbCon = new DbCon();
+
+      $dbCon->deleteProduct($uri[1]);
+    } else if ($uri[0] === 'product'){
+      http_response_code(405);
+      die('405 - Method not allowed!');
+    } else {
+      http_response_code(404);
+      die('404 - Page not found!');
+    }
     break;
   default:
     http_response_code(405);

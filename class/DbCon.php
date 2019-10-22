@@ -84,6 +84,28 @@ class DbCon {
       die('400 - Bad Request');
     }
   }
+
+  public function updateProduct($id, $name, $desc, $price) {
+    $sql = "UPDATE products SET name = '$name', description = '$desc', price = '$price' WHERE idProduct = '$id';";
+
+    if($this->con->query($sql)) {
+      echo "Successfully updated the product!";
+    } else {
+      http_response_code(400);
+      die('400 - Bad Request');
+    }
+  }
+
+  public function deleteProduct($id) {
+    $sql = "DELETE FROM products WHERE idProduct = $id";
+
+    if($this->con->query($sql)) {
+      echo "Successfully deleted product!";
+    } else {
+      http_response_code(400);
+      die('400 - Bad Request');
+    }
+  }
 }
 
 ?>
