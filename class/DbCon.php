@@ -62,22 +62,28 @@ class DbCon {
     return $product;
   }
 
-  public function getProductByName($name) {
+  /*public function getProductByName($name) {
     $product = null;
-    $sql = "SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE products.name = $name";
-    $result = $this->con->query($sql);
+    $sql = $this->con->prepare("SELECT products.idProduct, products.name, products.description, products.price FROM products WHERE products.name = ?");
+    $sql->bind_param("s", $name);
+    $result = $sql->execute();
 
     while($row = $result->fetch_object()) {
       $product = new Product($row->idProduct, $row->name, $row->description, $row->price);
     }
 
     return $product;
-  }
+  }*/
 
   public function createProduct($name, $desc, $price) {
-    $sql = "INSERT INTO products (products.name, products.description, products.price) VALUES ('$name', '$desc', '$price')";
+    $sql = $this->con->prepare("INSERT INTO products (products.name, products.description, products.price) VALUES (?, ?, ?)");
+    $sql->bind_param("ssi", $thisName, $thisDesc, $thisPrice);
 
-    if($this->con->query($sql)) {
+    $thisName = $name;
+    $thisDesc = $desc;
+    $thisPrice = $price;
+
+    if($sql->execute()) {
       echo "Successfully created the product!";
     } else {
       http_response_code(400);
