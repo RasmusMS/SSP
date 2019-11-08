@@ -35,6 +35,7 @@
  $userN = $headers['User'];
  $passW = $headers['Pass'];
 
+
  // Execute code based on method
  switch ($httpMethod) {
    case 'GET':

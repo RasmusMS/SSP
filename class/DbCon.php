@@ -178,7 +178,7 @@ class DbCon {
       while($row = $result->fetch_assoc()) {
         $hashed_password = $row['passWord'];
         if(!(password_verify($passWord, $hashed_password))){
-          die("Brugernavnet og/eller adgangskoden er forkert.");
+          die("Brugernavnet og adgangskoden matcher ikke");
         }
       }
     } else {
